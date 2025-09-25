@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Results - Medicine Recommendation System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Your Health Assessment Results</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Patient Information</h5>
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item"><strong>Age:</strong> {{ age }}</li>
+                            <li class="list-group-item"><strong>Gender:</strong> {{ gender }}</li>
+                            {% if allergies %}
+                            <li class="list-group-item"><strong>Allergies:</strong> {{ allergies }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">Predicted Disease</h5>
+                            <h3>{{ disease.name }}</h3>
+                            {% if disease.description %}
+                            <p>{{ disease.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Recommended Medicines</h4>
+            </div>
+            <div class="card-body">
+                {% if medicines %}
+                <div class="accordion" id="medicineAccordion">
+                    {% for medicine in medicines %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ medicine.id }}">
+                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ medicine.id }}" aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ medicine.id }}">
+                                {{ medicine.name }} {% if medicine.primary_treatment %}<span class="badge bg-primary ms-2">Primary Treatment</span>{% endif %}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ medicine.id }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" aria-labelledby="heading{{ medicine.id }}" data-bs-parent="#medicineAccordion">
+                            <div class="accordion-body">
+                                {% if medicine.description %}
+                                <p><strong>Description:</strong> {{ medicine.description }}</p>
+                                {% endif %}
+                                
+                                {% if medicine.dosage %}
+                                <div class="alert alert-primary">
+                                    <h6 class="alert-heading">Recommended Dosage</h6>
+                                    <p class="mb-0">{{ medicine.dosage }}</p>
+                                </div>
+                                {% endif %}
+                                
+                                {% if medicine.side_effects %}
+                                <div class="alert alert-warning">
+                                    <h6 class="alert-heading">Possible Side Effects</h6>
+                                    <p class="mb-0">{{ medicine.side_effects }}</p>
+                                </div>
+                                {% endif %}
+                                
+                                {% if medicine.warnings %}
+                                <div class="alert alert-danger">
+                                    <h6 class="alert-heading">Warnings</h6>
+                                    <ul class="mb-0">
+                                        {% for warning in medicine.warnings %}
+                                        <li>{{ warning }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+                                
+                                {% if medicine.interactions %}
+                                <div class="alert alert-danger">
+                                    <h6 class="alert-heading">Drug Interactions</h6>
+                                    <ul class="mb-0">
+                                        {% for interaction in medicine.interactions %}
+                                        <li>{{ interaction }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <p>No specific medicines could be recommended for this condition. Please consult with a healthcare professional.</p>
+                </div>
+                {% endif %}
+                
+                <div class="alert alert-secondary mt-4">
+                    <h5 class="alert-heading">Disclaimer</h5>
+                    <p class="mb-0">
+                        These recommendations are for informational purposes only and do not constitute medical advice. 
+                        Always consult with a qualified healthcare provider before starting any medication.
+                    </p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('symptoms') }}" class="btn btn-outline-primary">Check Different Symptoms</a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

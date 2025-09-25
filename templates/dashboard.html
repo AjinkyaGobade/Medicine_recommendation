@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Medicine Recommendation System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Welcome to your Dashboard, {{ current_user.username }}</h2>
+                <p class="card-text">Here you can view your health history and get new recommendations.</p>
+                <a href="{{ url_for('symptoms') }}" class="btn btn-primary">Check New Symptoms</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Your Health History</h4>
+            </div>
+            <div class="card-body">
+                {% if history %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Symptoms</th>
+                                <th>Predicted Disease</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in history %}
+                            <tr>
+                                <td>{{ entry.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ entry.age }}</td>
+                                <td>{{ entry.gender }}</td>
+                                <td>
+                                    {% set symptom_ids = entry.symptoms.split(',') %}
+                                    {% for symptom_id in symptom_ids %}
+                                        {% set symptom = Symptom.query.get(symptom_id) %}
+                                        {% if symptom %}
+                                            <span class="badge bg-info text-dark">{{ symptom.name }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% if entry.disease %}
+                                        {{ entry.disease.name }}
+                                    {% else %}
+                                        Unknown
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <p>You don't have any health records yet. Start by checking your symptoms.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

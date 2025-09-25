@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Check Symptoms - Medicine Recommendation System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Enter Your Symptoms</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('symptoms') }}">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="" selected disabled>Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Select Your Symptoms (select all that apply)</label>
+                        <div class="row">
+                            {% for symptom in symptoms %}
+                            <div class="col-md-4 mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="symptoms" value="{{ symptom.id }}" id="symptom{{ symptom.id }}">
+                                    <label class="form-check-label" for="symptom{{ symptom.id }}">
+                                        {{ symptom.name }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="allergies" class="form-label">Known Allergies (comma separated)</label>
+                        <input type="text" class="form-control" id="allergies" name="allergies" placeholder="e.g., Penicillin, Aspirin, Peanuts">
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Get Recommendations</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

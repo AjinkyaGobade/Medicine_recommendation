@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Medicine Recommendation System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg">
+            <div class="card-body text-center">
+                <h1 class="card-title mb-4">Welcome to Medicine Recommendation System</h1>
+                <p class="card-text lead">
+                    Get personalized medicine recommendations based on your symptoms and health profile.
+                </p>
+                <hr>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">How It Works</h5>
+                                <ol class="text-start">
+                                    <li>Create an account or login</li>
+                                    <li>Enter your symptoms and health information</li>
+                                    <li>Get personalized disease prediction</li>
+                                    <li>Receive medicine recommendations</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Features</h5>
+                                <ul class="text-start">
+                                    <li>Disease prediction based on symptoms</li>
+                                    <li>Personalized medicine recommendations</li>
+                                    <li>Allergy and drug interaction warnings</li>
+                                    <li>Secure health profile storage</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('symptoms') }}" class="btn btn-primary btn-lg">Check Your Symptoms</a>
+                    {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-2">Register</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4 shadow">
+            <div class="card-body">
+                <h3 class="card-title">Disclaimer</h3>
+                <p class="card-text">
+                    This system is for informational purposes only and is not a substitute for professional medical advice, 
+                    diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider 
+                    with any questions you may have regarding a medical condition.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

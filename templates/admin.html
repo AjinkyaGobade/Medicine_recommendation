@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Medicine Recommendation System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title">Admin Panel</h2>
+                <p class="card-text">Manage diseases, symptoms, and medicines for the recommendation system.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Diseases Management -->
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Diseases</h5>
+            </div>
+            <div class="card-body">
+                <form id="diseaseForm" class="mb-3">
+                    <div class="mb-3">
+                        <label for="diseaseName" class="form-label">Disease Name</label>
+                        <input type="text" class="form-control" id="diseaseName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="diseaseDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="diseaseDescription" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Disease</button>
+                </form>
+                
+                <hr>
+                
+                <div class="disease-list">
+                    <h6>Existing Diseases</h6>
+                    <ul class="list-group">
+                        {% for disease in diseases %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ disease.name }}
+                            <span class="badge bg-primary rounded-pill">{{ disease.symptoms|length }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Symptoms Management -->
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Symptoms</h5>
+            </div>
+            <div class="card-body">
+                <form id="symptomForm" class="mb-3">
+                    <div class="mb-3">
+                        <label for="symptomName" class="form-label">Symptom Name</label>
+                        <input type="text" class="form-control" id="symptomName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="symptomDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="symptomDescription" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info text-white">Add Symptom</button>
+                </form>
+                
+                <hr>
+                
+                <div class="symptom-list">
+                    <h6>Existing Symptoms</h6>
+                    <ul class="list-group">
+                        {% for symptom in symptoms %}
+                        <li class="list-group-item">{{ symptom.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Medicines Management -->
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Medicines</h5>
+            </div>
+            <div class="card-body">
+                <form id="medicineForm" class="mb-3">
+                    <div class="mb-3">
+                        <label for="medicineName" class="form-label">Medicine Name</label>
+                        <input type="text" class="form-control" id="medicineName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicineDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="medicineDescription" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicineDosage" class="form-label">Dosage</label>
+                        <input type="text" class="form-control" id="medicineDosage">
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicineSideEffects" class="form-label">Side Effects</label>
+                        <textarea class="form-control" id="medicineSideEffects" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Medicine</button>
+                </form>
+                
+                <hr>
+                
+                <div class="medicine-list">
+                    <h6>Existing Medicines</h6>
+                    <ul class="list-group">
+                        {% for medicine in medicines %}
+                        <li class="list-group-item">{{ medicine.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Disease-Symptom Mapping -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Map Symptoms to Diseases</h5>
+            </div>
+            <div class="card-body">
+                <form id="diseaseSymptomForm">
+                    <div class="mb-3">
+                        <label for="mapDisease" class="form-label">Select Disease</label>
+                        <select class="form-select" id="mapDisease" required>
+                            <option value="" selected disabled>Choose disease</option>
+                            {% for disease in diseases %}
+                            <option value="{{ disease.id }}">{{ disease.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mapSymptom" class="form-label">Select Symptom</label>
+                        <select class="form-select" id="mapSymptom" required>
+                            <option value="" selected disabled>Choose symptom</option>
+                            {% for symptom in symptoms %}
+                            <option value="{{ symptom.id }}">{{ symptom.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="symptomWeight" class="form-label">Weight (Importance: 0.1-10.0)</label>
+                        <input type="number" class="form-control" id="symptomWeight" min="0.1" max="10" step="0.1" value="1.0">
+                    </div>
+                    <button type="submit" class="btn btn-warning">Map Symptom to Disease</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Disease-Medicine Mapping -->
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Map Medicines to Diseases</h5>
+            </div>
+            <div class="card-body">
+                <form id="diseaseMedicineForm">
+                    <div class="mb-3">
+                        <label for="mapDiseaseMed" class="form-label">Select Disease</label>
+                        <select class="form-select" id="mapDiseaseMed" required>
+                            <option value="" selected disabled>Choose disease</option>
+                            {% for disease in diseases %}
+                            <option value="{{ disease.id }}">{{ disease.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mapMedicine" class="form-label">Select Medicine</label>
+                        <select class="form-select" id="mapMedicine" required>
+                            <option value="" selected disabled>Choose medicine</option>
+                            {% for medicine in medicines %}
+                            <option value="{{ medicine.id }}">{{ medicine.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="primaryTreatment">
+                        <label class="form-check-label" for="primaryTreatment">Primary Treatment</label>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Map Medicine to Disease</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add Disease
+    document.getElementById('diseaseForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('diseaseName').value;
+        const description = document.getElementById('diseaseDescription').value;
+        
+        fetch('/api/disease', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, description }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Disease added successfully!');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding disease');
+        });
+    });
+    
+    // Add Symptom
+    document.getElementById('symptomForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('symptomName').value;
+        const description = document.getElementById('symptomDescription').value;
+        
+        fetch('/api/symptom', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, description }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Symptom added successfully!');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding symptom');
+        });
+    });
+    
+    // Add Medicine
+    document.getElementById('medicineForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('medicineName').value;
+        const description = document.getElementById('medicineDescription').value;
+        const dosage = document.getElementById('medicineDosage').value;
+        const side_effects = document.getElementById('medicineSideEffects').value;
+        
+        fetch('/api/medicine', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, description, dosage, side_effects }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Medicine added successfully!');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding medicine');
+        });
+    });
+    
+    // Map Symptom to Disease
+    document.getElementById('diseaseSymptomForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const disease_id = document.getElementById('mapDisease').value;
+        const symptom_id = document.getElementById('mapSymptom').value;
+        const weight = document.getElementById('symptomWeight').value;
+        
+        fetch('/api/disease_symptom', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ disease_id, symptom_id, weight }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Symptom mapped to disease successfully!');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error mapping symptom to disease');
+        });
+    });
+    
+    // Map Medicine to Disease
+    document.getElementById('diseaseMedicineForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const disease_id = document.getElementById('mapDiseaseMed').value;
+        const medicine_id = document.getElementById('mapMedicine').value;
+        const primary_treatment = document.getElementById('primaryTreatment').checked;
+        
+        fetch('/api/disease_medicine', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ disease_id, medicine_id, primary_treatment }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Medicine mapped to disease successfully!');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error mapping medicine to disease');
+        });
+    });
+</script>
+{% endblock %}
