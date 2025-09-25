@@ -54,8 +54,6 @@ local_settings.py
 # Flask stuff:
 instance/
 .webassets-cache
-*.db
-.env
 
 # Scrapy stuff:
 .scrapy
